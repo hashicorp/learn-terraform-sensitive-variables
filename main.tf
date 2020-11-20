@@ -1,14 +1,14 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "3.16.0"
     }
   }
 }
 
 provider "aws" {
-  region  = var.aws_region
+  region = var.aws_region
 }
 
 data "aws_availability_zones" "available" {
@@ -90,10 +90,10 @@ module "elb_http" {
 module "ec2_instances" {
   source = "./modules/aws-instance"
 
-  instance_count = var.instances_per_subnet * length(module.vpc.private_subnets)
-  instance_type = var.instance_type
-  subnet_ids = module.vpc.private_subnets[*]
-  security_group_ids =  [module.app_security_group.this_security_group_id]
+  instance_count     = var.instances_per_subnet * length(module.vpc.private_subnets)
+  instance_type      = var.instance_type
+  subnet_ids         = module.vpc.private_subnets[*]
+  security_group_ids = [module.app_security_group.this_security_group_id]
 }
 
 resource "aws_db_subnet_group" "private" {

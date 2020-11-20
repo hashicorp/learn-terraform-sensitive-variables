@@ -4,13 +4,13 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable vpc_cidr_block {
+variable "vpc_cidr_block" {
   description = "CIDR block for VPC"
   type        = string
   default     = "10.0.0.0/16"
 }
 
-variable public_subnet_cidr_blocks {
+variable "public_subnet_cidr_blocks" {
   description = "Available cidr blocks for public subnets"
   type        = list(string)
   default = [
@@ -25,7 +25,7 @@ variable public_subnet_cidr_blocks {
   ]
 }
 
-variable private_subnet_cidr_blocks {
+variable "private_subnet_cidr_blocks" {
   description = "Available cidr blocks for private subnets"
   type        = list(string)
   default = [
