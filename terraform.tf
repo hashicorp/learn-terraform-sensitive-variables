@@ -3,7 +3,7 @@ terraform {
 cloud {
     organization = "organization-name"
     workspaces {
-      name = "learn-terraform-REPLACE_ME"
+      name = "learn-terraform-sensitive-variables"
     }
 }
 */
