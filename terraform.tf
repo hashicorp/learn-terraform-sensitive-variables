@@ -1,5 +1,5 @@
 terraform {
-    /* Uncomment this block to use Terraform Cloud for this tutorial
+/* Uncomment this block to use Terraform Cloud for this tutorial
 cloud {
     organization = "organization-name"
     workspaces {
