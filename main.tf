@@ -6,12 +6,15 @@ provider "aws" {
 }
 
 data "aws_availability_zones" "available" {
-  state = "available"
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "5.8.1"
 
   cidr = var.vpc_cidr_block
 
@@ -25,7 +28,7 @@ module "vpc" {
 
 module "app_security_group" {
   source  = "terraform-aws-modules/security-group/aws//modules/web"
-  version = "3.17.0"
+  version = "5.1.2"
 
   name        = "web-server-sg"
   description = "Security group for web-servers with HTTP ports open within VPC"
@@ -36,7 +39,7 @@ module "app_security_group" {
 
 module "lb_security_group" {
   source  = "terraform-aws-modules/security-group/aws//modules/web"
-  version = "3.17.0"
+  version = "5.1.2"
 
   name        = "lb-sg-project-alpha-dev"
   description = "Security group for load balancer with HTTP ports open within VPC"
@@ -52,14 +55,14 @@ resource "random_string" "lb_id" {
 
 module "elb_http" {
   source  = "terraform-aws-modules/elb/aws"
-  version = "2.4.0"
+  version = "4.0.2"
 
   # Ensure load balancer name is unique
   name = "lb-${random_string.lb_id.result}-project-alpha-dev"
 
   internal = false
 
-  security_groups = [module.lb_security_group.this_security_group_id]
+  security_groups = [module.lb_security_group.security_group_id]
   subnets         = module.vpc.public_subnets
 
   number_of_instances = length(module.ec2_instances.instance_ids)
@@ -87,7 +90,7 @@ module "ec2_instances" {
   instance_count     = var.instances_per_subnet * length(module.vpc.private_subnets)
   instance_type      = var.instance_type
   subnet_ids         = module.vpc.private_subnets[*]
-  security_group_ids = [module.app_security_group.this_security_group_id]
+  security_group_ids = [module.app_security_group.security_group_id]
 }
 
 resource "aws_db_subnet_group" "private" {
